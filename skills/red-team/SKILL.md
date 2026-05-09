@@ -23,6 +23,7 @@ Spawn subagent(s) with fresh eyes to critically assess any artifact — specs, p
 6. Design best practices
 7. Implementation feasibility
 8. Scope creep detection
+9. First normal form (1NF) — atomic values, no repeating groups, no duplicate rows
 
 Users may override with custom dimensions (e.g., "red-team this for security and performance only").
 
@@ -37,7 +38,7 @@ Users may override with custom dimensions (e.g., "red-team this for security and
 ### Compete Mode
 
 1. Read the user-referenced artifact.
-2. Dispatch two subagents independently with the same critique prompt.
+2. Dispatch two subagents independently. Give the first agent dimensions in default order; give the second agent the same dimensions in reverse order. This ensures different attention patterns.
 3. Consolidate findings: deduplicate, note which reviewer found each issue.
 4. Award 5 points to the reviewer contributing the most valuable feedback. Briefly justify the winner.
 5. Include any unique catches from the loser that the winner missed.
