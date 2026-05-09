@@ -86,6 +86,9 @@ By default, artifacts are assessed across 8 dimensions:
 6. **Design best practices** — violations of established patterns
 7. **Implementation feasibility** — can this actually be built as described?
 8. **Scope creep detection** — features that don't belong in the current scope
+9. **First normal form (1NF)** — atomic values, no repeating groups, no duplicate rows
+10. **Maintainability** — administrative ease, operational burden, clarity of ownership
+11. **Security** — input sanitization, permissions, RBAC/ABAC/AcBAC/RuBAC access control
 
 Override with custom dimensions:
 

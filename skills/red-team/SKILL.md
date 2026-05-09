@@ -24,6 +24,8 @@ Spawn subagent(s) with fresh eyes to critically assess any artifact — specs, p
 7. Implementation feasibility
 8. Scope creep detection
 9. First normal form (1NF) — atomic values, no repeating groups, no duplicate rows
+10. Maintainability — administrative ease, operational burden, clarity of ownership
+11. Security — input sanitization, permissions, RBAC/ABAC/AcBAC/RuBAC access control
 
 Users may override with custom dimensions (e.g., "red-team this for security and performance only").
 
