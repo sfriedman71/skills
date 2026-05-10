@@ -12,22 +12,17 @@ This repository contains agent-facing instructions for repeatable workflows such
 
 ## Install
 
-Released skills live in `agent-skills/`.
+Add agent-skills to the `plugin` array in your `opencode.json`:
 
-To install all released skills for OpenCode:
-
-```bash
-mkdir -p ~/.config/opencode/skills
-ln -s ~/skills/agent-skills/* ~/.config/opencode/skills/
+```json
+{
+  "plugin": ["agent-skills@git+https://github.com/sfriedman71/skills.git"]
+}
 ```
 
-To install one skill:
+Restart OpenCode. The plugin registers all skills automatically — no symlinks needed.
 
-```bash
-ln -s ~/skills/agent-skills/red-team ~/.config/opencode/skills/red-team
-```
-
-Replace `~/skills` with your actual checkout path if different.
+For detailed instructions, migration from older installs, and troubleshooting, see [.opencode/INSTALL.md](.opencode/INSTALL.md).
 
 ## Incubator
 

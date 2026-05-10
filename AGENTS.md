@@ -6,5 +6,5 @@
 - Skill files follow the OpenCode skill spec: YAML frontmatter with at least `name` and `description`, then the skill instructions.
 - There is no package manifest, task runner, CI workflow, or automated test command in this repo. Do not assume `npm`, `pnpm`, or build/lint/test scripts exist.
 - When adding or promoting a released skill, update the root `README.md` catalog table and matching skill section, and update `CHANGELOG.md` under `Unreleased`.
-- Installation is by symlink from `agent-skills/*`; keep docs clear that `incubator/` is not an install target.
+- Installation is by OpenCode plugin; see `.opencode/INSTALL.md` for setup.
 - The current released skill is `red-team`, triggered by phrases like `red-team`, `fresh eyes`, and `critique`; preserve its single-review and compete-mode behavior when editing it.
