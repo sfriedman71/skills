@@ -1,30 +1,45 @@
-# Skills
+# Agentic Skills
 
-Personal agent skills for opencode and compatible AI coding agents.
+Reusable skills for AI coding agents and LLM workflows.
 
-## Structure
+This repository contains agent-facing instructions for repeatable workflows such as adversarial review, debugging, planning, and evaluation. The skills are written for OpenCode-compatible skill loaders, but the patterns are intended to be useful across agentic development environments.
 
-Each skill lives in `skills/<name>/SKILL.md` following the [opencode skill spec](https://opencode.ai/docs/skills/).
+## Released Skills
+
+| Skill | Use When | Purpose |
+|-------|----------|---------|
+| [red-team](#red-team) | Reviewing specs, plans, code, or PRs | Adversarial review with fresh eyes |
 
 ## Install
 
-Symlink into your opencode config:
+Released skills live in `skills/`.
+
+To install all released skills for OpenCode:
 
 ```bash
+mkdir -p ~/.config/opencode/skills
 ln -s ~/skills/skills/* ~/.config/opencode/skills/
 ```
 
-Or symlink individual skills:
+To install one skill:
 
 ```bash
 ln -s ~/skills/skills/red-team ~/.config/opencode/skills/red-team
 ```
 
-## Skills
+Replace `~/skills` with your actual checkout path if different.
 
-| Skill | Description |
-|-------|-------------|
-| [red-team](#red-team) | Adversarial review of any artifact — specs, plans, code, PRs |
+## Incubator
+
+Experimental skills and development notes live in `incubator/`. They are public to show process, but only `skills/` is supported for installation.
+
+## Skill Lifecycle
+
+See `docs/skill-lifecycle.md` for authoring standards, evaluation expectations, and the promotion checklist.
+
+## License
+
+MIT. You may use, adapt, and redistribute these skills.
 
 ---
 
@@ -76,7 +91,7 @@ critique this plan, compete mode @docs/design.md
 
 #### Review dimensions
 
-By default, artifacts are assessed across 8 dimensions:
+By default, artifacts are assessed across 11 dimensions:
 
 1. **Logical errors** — flawed reasoning, incorrect assumptions
 2. **Redundancies** — duplicated logic, overlapping concerns
