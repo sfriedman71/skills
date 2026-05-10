@@ -12,26 +12,26 @@ This repository contains agent-facing instructions for repeatable workflows such
 
 ## Install
 
-Released skills live in `skills/`.
+Released skills live in `agent-skills/`.
 
 To install all released skills for OpenCode:
 
 ```bash
 mkdir -p ~/.config/opencode/skills
-ln -s ~/skills/skills/* ~/.config/opencode/skills/
+ln -s ~/skills/agent-skills/* ~/.config/opencode/skills/
 ```
 
 To install one skill:
 
 ```bash
-ln -s ~/skills/skills/red-team ~/.config/opencode/skills/red-team
+ln -s ~/skills/agent-skills/red-team ~/.config/opencode/skills/red-team
 ```
 
 Replace `~/skills` with your actual checkout path if different.
 
 ## Incubator
 
-Experimental skills and development notes live in `incubator/`. They are public to show process, but only `skills/` is supported for installation.
+Experimental skills and development notes live in `incubator/`. They are public to show process, but only `agent-skills/` is supported for installation.
 
 ## Skill Lifecycle
 
