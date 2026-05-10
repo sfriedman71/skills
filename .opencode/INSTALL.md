@@ -16,16 +16,6 @@ Add agent-skills to the `plugin` array in your `opencode.json` (global or projec
 
 Restart OpenCode. The plugin registers all skills automatically — no symlinks needed.
 
-## Migrating from the old symlink-based install
-
-If you previously installed using symlinks, remove the old setup:
-
-```bash
-rm -f ~/.config/opencode/skills/red-team
-```
-
-Then follow the installation steps above.
-
 ## Updating
 
 OpenCode installs through a git-backed package spec. A restart may not pick up the newest commit. If updates do not appear, clear OpenCode's package cache or reinstall the plugin.
