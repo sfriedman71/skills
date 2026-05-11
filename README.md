@@ -82,23 +82,22 @@ critique this plan, compete mode @docs/design.md
 | Mode | Trigger | Behavior |
 |------|---------|----------|
 | **Single** (default) | "red-team", "fresh eyes", "critique" | 1 subagent reviews |
-| **Compete** | "compete", "battle", "two reviewers", "two agents", "contest" | 2 subagents review independently; winner gets 5 points |
+| **Compete** | "compete", "battle", "two reviewers", "two agents", "contest" | 2 subagents review independently; scored on depth/uniqueness/actionability |
 
 #### Review dimensions
 
-By default, artifacts are assessed across 11 dimensions:
+By default, artifacts are assessed across 10 orthogonal dimensions:
 
-1. **Logical errors** — flawed reasoning, incorrect assumptions
-2. **Redundancies** — duplicated logic, overlapping concerns
-3. **Oversimplifications** — hand-waved complexity, missing edge cases
-4. **Omissions** — forgotten requirements, unspecified behavior
-5. **Unnecessary complexities** — over-engineering, premature abstraction
-6. **Design best practices** — violations of established patterns
-7. **Implementation feasibility** — can this actually be built as described?
-8. **Scope creep detection** — features that don't belong in the current scope
-9. **First normal form (1NF)** — atomic values, no repeating groups, no duplicate rows
-10. **Maintainability** — administrative ease, operational burden, clarity of ownership
-11. **Security** — input sanitization, permissions, RBAC/ABAC/AcBAC/RuBAC access control
+1. **Correctness** — flawed reasoning, incorrect assumptions, internal contradictions
+2. **Completeness** — missing requirements, unhandled cases, oversimplified descriptions
+3. **Clarity** — ambiguous language, undefined terms, vague requirements
+4. **Parsimony** — unnecessary complexity, redundancy, over-engineering, scope creep
+5. **Feasibility** — can this be built, run, or operated as described?
+6. **Resilience** — failure modes, error handling, edge cases, graceful degradation
+7. **Verifiability** — testability, acceptance criteria, observability
+8. **Data integrity** — atomic values, normalization, unambiguous encoding
+9. **Maintainability** — administrative ease, operational burden, clarity of ownership
+10. **Security** — input sanitization, permissions, access control, attack surface
 
 Override with custom dimensions:
 
@@ -111,6 +110,7 @@ red-team this for security and performance only @docs/api-design.md
 Each issue includes:
 
 - **Dimension tag** and **severity** (critical → minor)
+- **Location** — the specific text, section, or line being critiqued
 - **Description** of the problem
 - **Recommendation** — only when there's high confidence in the solution
 - **Alternative note** — when confidence is low or multiple solutions should be compared
