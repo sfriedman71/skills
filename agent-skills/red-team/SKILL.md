@@ -1,6 +1,6 @@
 ---
 name: red-team
-description: Use when reviewing specs, plans, designs, code, PRs, or any artifact for logical errors, omissions, oversimplifications, unnecessary complexities, design flaws, feasibility issues, or scope creep. Triggers include red-team, fresh eyes, critique.
+description: Use when reviewing specs, plans, designs, code, PRs, or any artifact for correctness, completeness, clarity, parsimony, feasibility, resilience, verifiability, data integrity, maintainability, or security issues. Triggers include red-team, fresh eyes, critique.
 ---
 
 # Red Team
@@ -15,17 +15,16 @@ Spawn subagent(s) with fresh eyes to critically assess any artifact — specs, p
 
 ## Default Dimensions
 
-1. Logical errors
-2. Redundancies
-3. Oversimplifications
-4. Omissions
-5. Unnecessary complexities
-6. Design best practices
-7. Implementation feasibility
-8. Scope creep detection
-9. First normal form (1NF) — atomic values, no repeating groups, no duplicate rows
-10. Maintainability — administrative ease, operational burden, clarity of ownership
-11. Security — input sanitization, permissions, RBAC/ABAC/AcBAC/RuBAC access control
+1. **Correctness** — Flawed reasoning, incorrect assumptions, internal contradictions between sections. Does the artifact arrive at valid conclusions from valid premises? Do different parts tell the same story?
+2. **Completeness** — Missing requirements, unhandled cases, unspecified behavior, oversimplified descriptions that omit necessary detail. Is everything that should be specified actually specified?
+3. **Clarity** — Language open to multiple interpretations, undefined terms, vague requirements, ambiguous references. Could two reasonable readers understand this differently?
+4. **Parsimony** — Unnecessary complexity, redundancy, over-engineering, premature abstraction, scope creep. Does every element earn its place?
+5. **Feasibility** — Can this actually be built, run, or operated as described? Are the dependencies realistic? Is the timeline achievable? Are the technical claims grounded?
+6. **Resilience** — Failure modes, error handling, edge cases, graceful degradation. What happens when things go wrong? Are the unhappy paths addressed with the same rigor as the happy path?
+7. **Verifiability** — Testability, acceptance criteria, observability. Can you confirm this works? Are the success conditions defined precisely enough to check?
+8. **Data integrity** — Atomic values, appropriate normalization, no ambiguous encoding, no redundant representation. Are data structures clean and unambiguous?
+9. **Maintainability** — Administrative ease, operational burden, clarity of ownership, ease of modification. Will this be manageable after it's built?
+10. **Security** — Input sanitization, permissions, access control, attack surface. Are the trust boundaries defined and enforced?
 
 Users may override with custom dimensions (e.g., "red-team this for security and performance only").
 
