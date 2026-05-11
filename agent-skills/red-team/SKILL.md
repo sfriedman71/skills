@@ -5,72 +5,80 @@ description: Use when reviewing specs, plans, designs, code, PRs, or any artifac
 
 # Red Team
 
-Spawn subagent(s) with fresh eyes to critically assess any artifact — specs, plans, designs, code, PRs, or documents.
+Spawn a subagent with fresh eyes to critically assess any artifact — specs, plans, designs, code, PRs, or documents. The subagent scans for relevant dimensions, then deep-dives on what matters.
 
-## Modes
+## Dimensions
 
-**Single** (default) — 1 subagent reviews the artifact.
+<core_dimensions>
+1. Correctness — Flawed reasoning, incorrect assumptions, internal contradictions between sections. Does the artifact arrive at valid conclusions from valid premises? Do different parts tell the same story?
+2. Completeness — Missing requirements, unhandled cases, unspecified behavior, oversimplified descriptions that omit necessary detail. Is everything that should be specified actually specified?
+3. Clarity — Language open to multiple interpretations, undefined terms, vague requirements, ambiguous references. Could two reasonable readers understand this differently?
+</core_dimensions>
 
-**Compete** — 2 subagents review independently. Triggered by: "compete", "battle", "two reviewers", "two agents", "contest".
+<context_dimensions>
+Select 2-4 most relevant to this artifact:
+4. Parsimony — Unnecessary complexity, redundancy, over-engineering, premature abstraction, scope creep. Does every element earn its place?
+5. Feasibility — Can this actually be built, run, or operated as described? Are the dependencies realistic? Is the timeline achievable? Are the technical claims grounded?
+6. Resilience — Failure modes, error handling, edge cases, graceful degradation. What happens when things go wrong? Are the unhappy paths addressed with the same rigor as the happy path?
+7. Verifiability — Testability, acceptance criteria, observability. Can you confirm this works? Are the success conditions defined precisely enough to check?
+8. Data integrity — Atomic values, appropriate normalization, no ambiguous encoding, no redundant representation. Are data structures clean and unambiguous?
+9. Maintainability — Administrative ease, operational burden, clarity of ownership, ease of modification. Will this be manageable after it's built?
+10. Security — Input sanitization, permissions, access control, attack surface. Are the trust boundaries defined and enforced?
+</context_dimensions>
 
-## Default Dimensions
-
-1. **Correctness** — Flawed reasoning, incorrect assumptions, internal contradictions between sections. Does the artifact arrive at valid conclusions from valid premises? Do different parts tell the same story?
-2. **Completeness** — Missing requirements, unhandled cases, unspecified behavior, oversimplified descriptions that omit necessary detail. Is everything that should be specified actually specified?
-3. **Clarity** — Language open to multiple interpretations, undefined terms, vague requirements, ambiguous references. Could two reasonable readers understand this differently?
-4. **Parsimony** — Unnecessary complexity, redundancy, over-engineering, premature abstraction, scope creep. Does every element earn its place?
-5. **Feasibility** — Can this actually be built, run, or operated as described? Are the dependencies realistic? Is the timeline achievable? Are the technical claims grounded?
-6. **Resilience** — Failure modes, error handling, edge cases, graceful degradation. What happens when things go wrong? Are the unhappy paths addressed with the same rigor as the happy path?
-7. **Verifiability** — Testability, acceptance criteria, observability. Can you confirm this works? Are the success conditions defined precisely enough to check?
-8. **Data integrity** — Atomic values, appropriate normalization, no ambiguous encoding, no redundant representation. Are data structures clean and unambiguous?
-9. **Maintainability** — Administrative ease, operational burden, clarity of ownership, ease of modification. Will this be manageable after it's built?
-10. **Security** — Input sanitization, permissions, access control, attack surface. Are the trust boundaries defined and enforced?
-
-Users may override with custom dimensions (e.g., "red-team this for security and performance only").
+Users may override with custom dimensions (e.g., "red-team this for security and performance only"). Custom overrides replace the entire dimension set — both core and context tiers.
 
 ## Instructions
-
-### Single Mode
 
 1. Read the user-referenced artifact.
 2. Dispatch one subagent with the critique prompt below.
 3. Return the subagent's severity-ranked issue list.
 
-### Compete Mode
+## Critique Prompt
 
-1. Read the user-referenced artifact.
-2. Dispatch two subagents independently. Give the first agent dimensions in default order; give the second agent the same dimensions in reverse order. This ensures different attention patterns.
-3. Score each reviewer:
-   - Depth (0-2): surface observations / some root-cause / consistent root-cause analysis
-   - Uniqueness (0-2): no unique findings / some unique / substantially unique
-   - Actionability (0-2): vague or none / present but generic / specific and implementable
-   Total: 0-6. Highest total wins. Briefly justify.
-4. Fuse findings:
-   - Convergent (both found): mark "high confidence" — likely real problems
-   - Divergent (only one found): mark "needs verification" — consumer decides
-   - Present convergent findings first, then divergent
-5. Include any unique catches from the lower-scoring reviewer that the winner missed.
+You are reviewing an artifact with fresh eyes.
 
-## Subagent Critique Prompt
+<core_dimensions>
+1. Correctness — Flawed reasoning, incorrect assumptions, internal contradictions between sections. Does the artifact arrive at valid conclusions from valid premises? Do different parts tell the same story?
+2. Completeness — Missing requirements, unhandled cases, unspecified behavior, oversimplified descriptions that omit necessary detail. Is everything that should be specified actually specified?
+3. Clarity — Language open to multiple interpretations, undefined terms, vague requirements, ambiguous references. Could two reasonable readers understand this differently?
+</core_dimensions>
 
-You are reviewing an artifact with fresh eyes. Assess it across the following dimensions:
+<context_dimensions>
+Select 2-4 most relevant to this artifact:
+4. Parsimony — Unnecessary complexity, redundancy, over-engineering, premature abstraction, scope creep. Does every element earn its place?
+5. Feasibility — Can this actually be built, run, or operated as described? Are the dependencies realistic? Is the timeline achievable? Are the technical claims grounded?
+6. Resilience — Failure modes, error handling, edge cases, graceful degradation. What happens when things go wrong? Are the unhappy paths addressed with the same rigor as the happy path?
+7. Verifiability — Testability, acceptance criteria, observability. Can you confirm this works? Are the success conditions defined precisely enough to check?
+8. Data integrity — Atomic values, appropriate normalization, no ambiguous encoding, no redundant representation. Are data structures clean and unambiguous?
+9. Maintainability — Administrative ease, operational burden, clarity of ownership, ease of modification. Will this be manageable after it's built?
+10. Security — Input sanitization, permissions, access control, attack surface. Are the trust boundaries defined and enforced?
+</context_dimensions>
 
-{dimensions}
+<phase name="scan">
+Read the artifact. For each core dimension, note whether issues exist. For context dimensions, select 2-4 most relevant to this artifact and note whether issues exist.
 
-Weight your analysis toward dimensions most relevant to the artifact type (e.g., clarity and feasibility for specs; security and data integrity for code; parsimony and verifiability for plans).
+Output a shortlist in this format:
+- DIMENSION NAME: brief signal — what caught your attention, or "no issues"
 
-For each dimension where you find no issues, state "No issues found for [dimension]" rather than omitting it.
+Only list dimensions where you found issues or selected them for deeper analysis. Do not list dimensions you did not select and found no issues in.
+</phase>
 
-For each issue found, return:
+<phase name="analyze">
+For each dimension on your shortlist that has issues, produce a full issue report.
 
-- **Dimension tag** — which dimension this issue falls under
+<output_format>
+For each issue:
+- **Dimension** — which dimension
 - **Severity** — critical, major, or minor
-- **Location** — cite the specific text, section, or line you are critiquing
+- **Location** — cite the specific text, section, or line
 - **Description** — what the issue is
 - **Recommendation** — ONLY if you have high confidence in the solution
 - **Alternative note** — if low confidence or multiple viable solutions exist, flag for comparison/decision instead of recommending one
+</output_format>
 
 Rank all issues from critical to minor.
+</phase>
 
 Do not be polite. Do not hedge. Find real problems.
 
