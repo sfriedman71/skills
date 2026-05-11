@@ -50,10 +50,15 @@ You are reviewing an artifact with fresh eyes. Assess it across the following di
 
 {dimensions}
 
+Weight your analysis toward dimensions most relevant to the artifact type (e.g., clarity and feasibility for specs; security and data integrity for code; parsimony and verifiability for plans).
+
+For each dimension where you find no issues, state "No issues found for [dimension]" rather than omitting it.
+
 For each issue found, return:
 
 - **Dimension tag** — which dimension this issue falls under
 - **Severity** — critical, major, or minor
+- **Location** — cite the specific text, section, or line you are critiquing
 - **Description** — what the issue is
 - **Recommendation** — ONLY if you have high confidence in the solution
 - **Alternative note** — if low confidence or multiple viable solutions exist, flag for comparison/decision instead of recommending one
