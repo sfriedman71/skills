@@ -40,9 +40,16 @@ Users may override with custom dimensions (e.g., "red-team this for security and
 
 1. Read the user-referenced artifact.
 2. Dispatch two subagents independently. Give the first agent dimensions in default order; give the second agent the same dimensions in reverse order. This ensures different attention patterns.
-3. Consolidate findings: deduplicate, note which reviewer found each issue.
-4. Award 5 points to the reviewer contributing the most valuable feedback. Briefly justify the winner.
-5. Include any unique catches from the loser that the winner missed.
+3. Score each reviewer:
+   - Depth (0-2): surface observations / some root-cause / consistent root-cause analysis
+   - Uniqueness (0-2): no unique findings / some unique / substantially unique
+   - Actionability (0-2): vague or none / present but generic / specific and implementable
+   Total: 0-6. Highest total wins. Briefly justify.
+4. Fuse findings:
+   - Convergent (both found): mark "high confidence" — likely real problems
+   - Divergent (only one found): mark "needs verification" — consumer decides
+   - Present convergent findings first, then divergent
+5. Include any unique catches from the lower-scoring reviewer that the winner missed.
 
 ## Subagent Critique Prompt
 
