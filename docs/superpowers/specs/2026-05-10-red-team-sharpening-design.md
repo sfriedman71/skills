@@ -5,29 +5,50 @@
 
 ## 1. Dimensions
 
-### Changes
+### Problems with the Original Dimensions
 
-| Action | Dimension | Rationale |
-|--------|-----------|-----------|
-| Merge | Redundancies → Unnecessary complexities | Redundancy is a subset of unnecessary complexity; having both splits attention on the same problem |
-| Generalize | 1NF → Data structure soundness | Database normalization is too domain-specific; the generalized form covers JSON schemas, API contracts, config files, and object models |
-| Add | Clarity and ambiguity | Language open to multiple interpretations is a common and dangerous problem in specs/plans that no current dimension catches |
+The original 11 dimensions had significant overlap and gaps:
 
-### New Dimension List
+- **Oversimplifications ≈ Omissions**: Oversimplifying is omitting necessary detail while implying completeness. Reviewers can't cleanly distinguish them.
+- **Design best practices is a grab bag**: Every issue could be reframed as a "design best practice" violation. It catches everything and nothing.
+- **Redundancies ⊂ Unnecessary complexities**: Already identified; redundancy is a subset.
+- **1NF is domain-specific**: Database normalization doesn't apply to most artifact types.
+- **Security is a domain lens, not a dimension**: Security issues are really instances of other problems (logical error in auth, omission of input validation). But it's too important to drop — kept as an explicit lens.
+- **Missing: Consistency**: Internal contradictions between sections. Not a logical error (both parts may be individually valid), not an omission (both exist). A distinct problem.
+- **Missing: Resilience**: Failure modes, error handling, edge cases. Happy-path logic might be sound, but unhappy paths unaddressed.
+- **Missing: Verifiability**: Can the claims be checked? Are acceptance criteria defined? Something can be clear but untestable.
 
-1. Logical errors
-2. Oversimplifications
-3. Omissions
-4. Unnecessary complexities (includes redundancies)
-5. Design best practices
-6. Implementation feasibility
-7. Scope creep detection
-8. Clarity and ambiguity — language open to multiple interpretations, undefined terms, vague requirements
-9. Data structure soundness — atomic values, no ambiguous encoding, no redundant representation, appropriate normalization
-10. Maintainability — administrative ease, operational burden, clarity of ownership
-11. Security — input sanitization, permissions, access control
+### New Dimension List (10 dimensions)
 
-Same count (11), but better scoped. Each dimension now covers a distinct concern with minimal overlap.
+Each dimension is mutually exclusive, jointly exhaustive, and actionable — the name tells the reviewer what to look for.
+
+1. **Correctness** — Flawed reasoning, incorrect assumptions, internal contradictions between sections. Does the artifact arrive at valid conclusions from valid premises? Do different parts tell the same story?
+2. **Completeness** — Missing requirements, unhandled cases, unspecified behavior, oversimplified descriptions that omit necessary detail. Is everything that should be specified actually specified?
+3. **Clarity** — Language open to multiple interpretations, undefined terms, vague requirements, ambiguous references. Could two reasonable readers understand this differently?
+4. **Parsimony** — Unnecessary complexity, redundancy, over-engineering, premature abstraction, scope creep. Does every element earn its place?
+5. **Feasibility** — Can this actually be built, run, or operated as described? Are the dependencies realistic? Is the timeline achievable? Are the technical claims grounded?
+6. **Resilience** — Failure modes, error handling, edge cases, graceful degradation. What happens when things go wrong? Are the unhappy paths addressed with the same rigor as the happy path?
+7. **Verifiability** — Testability, acceptance criteria, observability. Can you confirm this works? Are the success conditions defined precisely enough to check?
+8. **Data integrity** — Atomic values, appropriate normalization, no ambiguous encoding, no redundant representation. Are data structures clean and unambiguous?
+9. **Maintainability** — Administrative ease, operational burden, clarity of ownership, ease of modification. Will this be manageable after it's built?
+10. **Security** — Input sanitization, permissions, access control, attack surface. Are the trust boundaries defined and enforced?
+
+### Mapping from Old to New
+
+| Old dimension | New home |
+|---------------|----------|
+| Logical errors | Correctness |
+| Oversimplifications | Completeness |
+| Omissions | Completeness |
+| Redundancies | Parsimony |
+| Unnecessary complexities | Parsimony |
+| Design best practices | Distributed across dimensions (was too vague to be useful) |
+| Implementation feasibility | Feasibility |
+| Scope creep detection | Parsimony |
+| 1NF | Data integrity |
+| Maintainability | Maintainability |
+| Security | Security |
+| *(new)* | Clarity, Resilience, Verifiability |
 
 ## 2. Critique Prompt
 
@@ -41,7 +62,7 @@ Same count (11), but better scoped. Each dimension now covers a distinct concern
 
 **Artifact-type awareness**: Add one sentence to the critique prompt instructing the subagent to weight dimensions by artifact relevance:
 
-> Weight your analysis toward dimensions most relevant to the artifact type (e.g., clarity and feasibility for specs; security and data structure for code; scope and sequencing for plans).
+> Weight your analysis toward dimensions most relevant to the artifact type (e.g., clarity and feasibility for specs; security and data integrity for code; parsimony and verifiability for plans).
 
 **Require specificity**: Add a citation requirement to the output format:
 
@@ -58,7 +79,7 @@ You are reviewing an artifact with fresh eyes. Assess it across the following di
 
 {dimensions}
 
-Weight your analysis toward dimensions most relevant to the artifact type (e.g., clarity and feasibility for specs; security and data structure for code; scope and sequencing for plans).
+Weight your analysis toward dimensions most relevant to the artifact type (e.g., clarity and feasibility for specs; security and data integrity for code; parsimony and verifiability for plans).
 
 For each dimension where you find no issues, state "No issues found for [dimension]" rather than omitting it.
 
@@ -122,7 +143,7 @@ Total: 0-6 per reviewer. Highest total wins. Brief justification required.
 
 | Area | Before | After |
 |------|--------|-------|
-| Dimensions | 1NF is domain-specific; redundancies overlaps with unnecessary complexities; no ambiguity detection | Generalized data structure dimension; merged overlap; new clarity/ambiguity dimension |
+| Dimensions | Overlapping (oversimplifications≈omissions, redundancies⊂complexities), vague (design best practices), domain-specific (1NF), missing coverage (consistency, resilience, verifiability) | 10 orthogonal dimensions with detailed descriptions: correctness, completeness, clarity, parsimony, feasibility, resilience, verifiability, data integrity, maintainability, security |
 | Critique prompt | Generic across artifact types; allows vague findings; silently skips dimensions | Artifact-type weighting; requires citations; explicit no-issues-found guard |
 | Compete mode | Arbitrary 5-point award; vague "deduplicate" | Scoring rubric (depth/uniqueness/actionability); structured convergence/divergence fusion |
 
