@@ -8,18 +8,54 @@
 
 **Tech Stack:** Markdown skill files only.
 
+**Editing convention:** All edits use content-based matching (oldString → newString), not line numbers. Line numbers shift after each edit, so content matching is the only reliable approach. If any edit fails because the target content doesn't match, read the file, find the correct section by heading name, and adapt the edit.
+
 ---
 
 ### Task 1: Update dimensions in SKILL.md
 
 **Files:**
-- Modify: `agent-skills/red-team/SKILL.md:16-30`
+- Modify: `agent-skills/red-team/SKILL.md`
 
-- [ ] **Step 1: Replace the Default Dimensions section**
+- [ ] **Step 1: Update the frontmatter description**
 
-Replace lines 16-30 (the entire `## Default Dimensions` section through the custom dimensions line) with:
+Match and replace the `description` field in the YAML frontmatter:
 
-```markdown
+**oldString:**
+```
+description: Use when reviewing specs, plans, designs, code, PRs, or any artifact for logical errors, omissions, oversimplifications, unnecessary complexities, design flaws, feasibility issues, or scope creep. Triggers include red-team, fresh eyes, critique.
+```
+
+**newString:**
+```
+description: Use when reviewing specs, plans, designs, code, PRs, or any artifact for correctness, completeness, clarity, parsimony, feasibility, resilience, verifiability, data integrity, maintainability, or security issues. Triggers include red-team, fresh eyes, critique.
+```
+
+- [ ] **Step 2: Replace the Default Dimensions section**
+
+Match and replace the entire `## Default Dimensions` section through the custom dimensions line:
+
+**oldString:**
+```
+## Default Dimensions
+
+1. Logical errors
+2. Redundancies
+3. Oversimplifications
+4. Omissions
+5. Unnecessary complexities
+6. Design best practices
+7. Implementation feasibility
+8. Scope creep detection
+9. First normal form (1NF) — atomic values, no repeating groups, no duplicate rows
+10. Maintainability — administrative ease, operational burden, clarity of ownership
+11. Security — input sanitization, permissions, RBAC/ABAC/AcBAC/RuBAC access control
+
+Users may override with custom dimensions (e.g., "red-team this for security and performance only").
+```
+
+**newString:**
+```
 ## Default Dimensions
 
 1. **Correctness** — Flawed reasoning, incorrect assumptions, internal contradictions between sections. Does the artifact arrive at valid conclusions from valid premises? Do different parts tell the same story?
@@ -36,20 +72,17 @@ Replace lines 16-30 (the entire `## Default Dimensions` section through the cust
 Users may override with custom dimensions (e.g., "red-team this for security and performance only").
 ```
 
-- [ ] **Step 2: Update the frontmatter description**
+- [ ] **Step 3: Verify — search for old dimension names**
 
-Replace line 3 (the `description` field) with:
+Run: `rg "Logical errors|Redundancies|Oversimplifications|Omissions|Unnecessary complexities|Design best practices|Implementation feasibility|Scope creep detection|1NF|First normal form" agent-skills/red-team/SKILL.md`
 
-```yaml
-description: Use when reviewing specs, plans, designs, code, PRs, or any artifact for correctness, completeness, clarity, parsimony, feasibility, resilience, verifiability, data integrity, maintainability, or security issues. Triggers include red-team, fresh eyes, critique.
-```
+Expected: no matches. If matches remain, the old content was not fully replaced.
 
-- [ ] **Step 3: Read the file and verify dimensions match the spec**
+Also verify the new dimensions are present:
 
-Read `agent-skills/red-team/SKILL.md` and confirm:
-- Frontmatter description references the 10 new dimension names
-- Default Dimensions section lists all 10 with their descriptions
-- No references to old dimension names (logical errors, redundancies, oversimplifications, omissions, unnecessary complexities, design best practices, implementation feasibility, scope creep detection, 1NF)
+Run: `rg "Correctness|Completeness|Clarity|Parsimony|Feasibility|Resilience|Verifiability|Data integrity|Maintainability|Security" agent-skills/red-team/SKILL.md`
+
+Expected: all 10 dimension names appear.
 
 - [ ] **Step 4: Commit**
 
@@ -68,13 +101,35 @@ actionable with a detailed description."
 ### Task 2: Update critique prompt in SKILL.md
 
 **Files:**
-- Modify: `agent-skills/red-team/SKILL.md:48-64`
+- Modify: `agent-skills/red-team/SKILL.md`
 
 - [ ] **Step 1: Replace the Subagent Critique Prompt section**
 
-Replace the entire `## Subagent Critique Prompt` section (lines 48-64) with:
+Match and replace the entire `## Subagent Critique Prompt` section:
 
-```markdown
+**oldString:**
+```
+## Subagent Critique Prompt
+
+You are reviewing an artifact with fresh eyes. Assess it across the following dimensions:
+
+{dimensions}
+
+For each issue found, return:
+
+- **Dimension tag** — which dimension this issue falls under
+- **Severity** — critical, major, or minor
+- **Description** — what the issue is
+- **Recommendation** — ONLY if you have high confidence in the solution
+- **Alternative note** — if low confidence or multiple viable solutions exist, flag for comparison/decision instead of recommending one
+
+Rank all issues from critical to minor.
+
+Do not be polite. Do not hedge. Find real problems.
+```
+
+**newString:**
+```
 ## Subagent Critique Prompt
 
 You are reviewing an artifact with fresh eyes. Assess it across the following dimensions:
@@ -99,13 +154,11 @@ Rank all issues from critical to minor.
 Do not be polite. Do not hedge. Find real problems.
 ```
 
-- [ ] **Step 2: Read the file and verify the critique prompt matches the spec**
+- [ ] **Step 2: Verify — search for new prompt features**
 
-Read `agent-skills/red-team/SKILL.md` and confirm:
-- Artifact-type weighting sentence is present
-- "No issues found" guard is present
-- "Location" field is in the output format
-- Recommendation/alternative note distinction is preserved
+Run: `rg "Weight your analysis|No issues found|Location" agent-skills/red-team/SKILL.md`
+
+Expected: all three patterns match. If any is missing, the replacement was incomplete.
 
 - [ ] **Step 3: Commit**
 
@@ -119,13 +172,25 @@ git commit -m "Sharpen critique prompt: artifact-type weighting, citations, no-i
 ### Task 3: Update compete mode in SKILL.md
 
 **Files:**
-- Modify: `agent-skills/red-team/SKILL.md:40-46`
+- Modify: `agent-skills/red-team/SKILL.md`
 
 - [ ] **Step 1: Replace the Compete Mode section**
 
-Replace the `### Compete Mode` section (lines 40-46) with:
+Match and replace the `### Compete Mode` instructions:
 
-```markdown
+**oldString:**
+```
+### Compete Mode
+
+1. Read the user-referenced artifact.
+2. Dispatch two subagents independently. Give the first agent dimensions in default order; give the second agent the same dimensions in reverse order. This ensures different attention patterns.
+3. Consolidate findings: deduplicate, note which reviewer found each issue.
+4. Award 5 points to the reviewer contributing the most valuable feedback. Briefly justify the winner.
+5. Include any unique catches from the loser that the winner missed.
+```
+
+**newString:**
+```
 ### Compete Mode
 
 1. Read the user-referenced artifact.
@@ -142,13 +207,15 @@ Replace the `### Compete Mode` section (lines 40-46) with:
 5. Include any unique catches from the lower-scoring reviewer that the winner missed.
 ```
 
-- [ ] **Step 2: Read the file and verify compete mode matches the spec**
+- [ ] **Step 2: Verify — search for old compete mode language**
 
-Read `agent-skills/red-team/SKILL.md` and confirm:
-- No "5 points" or "Award" language remains
-- Scoring rubric (depth/uniqueness/actionability) with 0-2 scale is present
-- Structured fusion (convergent/divergent) replaces "deduplicate"
-- "lower-scoring reviewer" replaces "loser"
+Run: `rg "Award 5 points|deduplicate|the loser" agent-skills/red-team/SKILL.md`
+
+Expected: no matches. If matches remain, the old content was not fully replaced.
+
+Run: `rg "Depth \(0-2\)|Convergent|Divergent|lower-scoring" agent-skills/red-team/SKILL.md`
+
+Expected: all patterns match.
 
 - [ ] **Step 3: Commit**
 
@@ -162,27 +229,28 @@ git commit -m "Replace arbitrary compete scoring with depth/uniqueness/actionabi
 ### Task 4: Update README.md
 
 **Files:**
-- Modify: `README.md:85-101`
+- Modify: `README.md`
 
 - [ ] **Step 1: Update the compete mode table row**
 
-Replace line 85:
+Match and replace:
 
-```markdown
+**oldString:**
+```
 | **Compete** | "compete", "battle", "two reviewers", "two agents", "contest" | 2 subagents review independently; winner gets 5 points |
 ```
 
-with:
-
-```markdown
+**newString:**
+```
 | **Compete** | "compete", "battle", "two reviewers", "two agents", "contest" | 2 subagents review independently; scored on depth/uniqueness/actionability |
 ```
 
 - [ ] **Step 2: Update the Review dimensions section**
 
-Replace lines 89-101:
+Match and replace:
 
-```markdown
+**oldString:**
+```
 By default, artifacts are assessed across 11 dimensions:
 
 1. **Logical errors** — flawed reasoning, incorrect assumptions
@@ -198,9 +266,8 @@ By default, artifacts are assessed across 11 dimensions:
 11. **Security** — input sanitization, permissions, RBAC/ABAC/AcBAC/RuBAC access control
 ```
 
-with:
-
-```markdown
+**newString:**
+```
 By default, artifacts are assessed across 10 orthogonal dimensions:
 
 1. **Correctness** — flawed reasoning, incorrect assumptions, internal contradictions
@@ -217,9 +284,10 @@ By default, artifacts are assessed across 10 orthogonal dimensions:
 
 - [ ] **Step 3: Update the Output format section**
 
-Replace lines 111-117:
+Match and replace:
 
-```markdown
+**oldString:**
+```
 Each issue includes:
 
 - **Dimension tag** and **severity** (critical → minor)
@@ -228,9 +296,8 @@ Each issue includes:
 - **Alternative note** — when confidence is low or multiple solutions should be compared
 ```
 
-with:
-
-```markdown
+**newString:**
+```
 Each issue includes:
 
 - **Dimension tag** and **severity** (critical → minor)
@@ -240,14 +307,15 @@ Each issue includes:
 - **Alternative note** — when confidence is low or multiple solutions should be compared
 ```
 
-- [ ] **Step 4: Read the file and verify all changes**
+- [ ] **Step 4: Verify — search for old content**
 
-Read `README.md` and confirm:
-- Compete mode row no longer mentions "5 points"
-- Dimension count is 10, not 11
-- All 10 new dimensions are listed with descriptions
-- Old dimension names are gone
-- Output format includes Location field
+Run: `rg "5 points|11 dimensions|Logical errors|Redundancies|Oversimplifications|1NF|First normal form" README.md`
+
+Expected: no matches.
+
+Run: `rg "10 orthogonal|Correctness|Completeness|Clarity|Parsimony|Feasibility|Resilience|Verifiability|Data integrity|Location" README.md`
+
+Expected: all patterns match.
 
 - [ ] **Step 5: Commit**
 
@@ -265,17 +333,32 @@ git commit -m "Update README to reflect new dimensions, scoring, and output form
 
 - [ ] **Step 1: Add changelog entry under Unreleased**
 
-After the existing Unreleased entries (line 9), add:
+Match and replace the existing Unreleased section:
 
-```markdown
+**oldString:**
+```
+## Unreleased
+
+- Added repository management structure: released skills in `agent-skills/`, incubator for experiments, lifecycle documentation, MIT license.
+- Documented existing `red-team` skill.
+```
+
+**newString:**
+```
+## Unreleased
+
 - Redesigned review dimensions: 10 orthogonal dimensions (correctness, completeness, clarity, parsimony, feasibility, resilience, verifiability, data integrity, maintainability, security) replacing the original 11 overlapping ones.
 - Sharpened critique prompt: artifact-type weighting, citation requirement, no-issues-found guard.
 - Replaced compete mode scoring: depth/uniqueness/actionability rubric (0-6) instead of arbitrary 5 points; structured convergence/divergence fusion instead of vague deduplication.
+- Added repository management structure: released skills in `agent-skills/`, incubator for experiments, lifecycle documentation, MIT license.
+- Documented existing `red-team` skill.
 ```
 
-- [ ] **Step 2: Read the file and verify the entry**
+- [ ] **Step 2: Verify — search for new entries**
 
-Read `CHANGELOG.md` and confirm the new entries are under `## Unreleased` and before any dated headings.
+Run: `rg "orthogonal dimensions|artifact-type weighting|convergence/divergence" CHANGELOG.md`
+
+Expected: all three patterns match.
 
 - [ ] **Step 3: Commit**
 
